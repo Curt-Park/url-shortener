@@ -50,19 +50,6 @@ func (enc *Encoding) Encode(src []byte) []byte {
 	return enc._encodeV2(src)
 }
 
-// _encodeV1 is obsolete, it is here to make sure that the new
-// implementation is compatible with the old one.
-//
-// We don't want to break the programs which use this package.
-func (enc *Encoding) _encodeV1(src []byte) []byte {
-	if len(src) == 0 {
-		return []byte{}
-	}
-	dst := make([]byte, 0, len(src)*9/5)
-	encoder := newEncoder(src)
-	return encoder.encode(dst, enc.encode[:])
-}
-
 func (enc *Encoding) _encodeV2(src []byte) []byte {
 	if len(src) == 0 {
 		return []byte{}
@@ -99,51 +86,6 @@ func newEncoder(src []byte) *encoder {
 		src: src,
 		pos: len(src) * 8,
 	}
-}
-
-func (enc *encoder) next() (byte, bool) {
-	var i, pos int
-	var j, blen byte
-	pos = enc.pos - 6
-	if pos <= 0 {
-		pos = 0
-		blen = byte(enc.pos)
-	} else {
-		i = pos / 8
-		j = byte(pos % 8)
-		blen = byte((i+1)*8 - pos)
-		if blen > 6 {
-			blen = 6
-		}
-	}
-	shift := 8 - j - blen
-	b := enc.src[i] >> shift & (1<<blen - 1)
-
-	if blen < 6 && pos > 0 {
-		blen1 := 6 - blen
-		b = b<<blen1 | enc.src[i+1]>>(8-blen1)
-	}
-	if b&compactMask == compactMask {
-		if pos > 0 || b > mask5bits {
-			pos++
-		}
-		b &= mask5bits
-	}
-	enc.pos = pos
-
-	return b, pos > 0
-}
-
-func (enc *encoder) encode(dst []byte, encTable []byte) []byte {
-	x, hasMore := enc.next()
-	for {
-		dst = append(dst, encTable[x])
-		if !hasMore {
-			break
-		}
-		x, hasMore = enc.next()
-	}
-	return dst
 }
 
 func (enc *encoder) encodeV2(dst []byte, encTable []byte) []byte {

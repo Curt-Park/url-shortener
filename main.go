@@ -11,6 +11,8 @@ import (
 	"github.com/labstack/echo-contrib/prometheus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	echoSwagger "github.com/swaggo/echo-swagger"
+	_ "go.uber.org/automaxprocs"
 )
 
 var (
@@ -18,6 +20,10 @@ var (
 	profile bool
 )
 
+//	@title			URL Shortener.
+//	@description	profiling - http://localhost:30000/debug/pprof/
+//	@contact.name	Curt-Park
+//	@contact.email	www.jwpark.co.kr@gmail.com
 func main() {
 	// Parse the args.
 	flag.StringVar(&port, "port", "8080", "Service Port. Default: 10000")
@@ -45,10 +51,16 @@ func main() {
 	e.GET("/:key", internal.OriginalURL)
 
 	// Start the server
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 	e.Logger.Fatal(e.Start(":" + port))
 }
 
-// Healthcheck API.
+//	@Summary		Healthcheck
+//	@Description	It returns true if the api server is alive.
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	bool	"API server's liveness"
+//	@Router			/ [get].
 func healthcheck(c echo.Context) error {
 	return c.JSON(http.StatusOK, true)
 }

@@ -6,6 +6,7 @@ run-profile:
 	$(MAKE) build
 	./main --profile
 
+.PHONY: docs
 docs:
 	swag init
 
@@ -14,7 +15,7 @@ setup-dev:
 
 format:
 	golines -m 100 -t 4 -w main.go internal/*.go
-	# swag fmt
+	swag fmt
 
 lint:
 	golangci-lint run

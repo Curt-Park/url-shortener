@@ -1,0 +1,101 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "profiling - http://localhost:30000/debug/pprof/",
+        "title": "URL Shortener.",
+        "contact": {
+            "name": "Curt-Park",
+            "email": "www.jwpark.co.kr@gmail.com"
+        }
+    },
+    "paths": {
+        "/": {
+            "get": {
+                "description": "It returns true if the api server is alive.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Healthcheck",
+                "responses": {
+                    "200": {
+                        "description": "API server's liveness",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
+        "/shorten": {
+            "post": {
+                "description": "Shorten the URL as 11-length Base62 string.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Shorten the URL.",
+                "parameters": [
+                    {
+                        "description": "url",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal.ShortenURLReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {}
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {}
+                    }
+                }
+            }
+        },
+        "/{key}": {
+            "get": {
+                "description": "Redirect to the original URL.",
+                "summary": "Redirect to the original URL.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "key",
+                        "name": "key",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "302": {
+                        "description": "Found",
+                        "schema": {}
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {}
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "internal.ShortenURLReq": {
+            "type": "object",
+            "properties": {
+                "url": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
