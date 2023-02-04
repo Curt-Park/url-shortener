@@ -52,7 +52,7 @@ func init() {
 	enc = NewEncoding(characterSet)
 
 	if len(configPath) == 0 {
-		configPath = "config.yaml"
+		configPath = "config/default.yaml"
 	}
 
 	// Read the config file.
