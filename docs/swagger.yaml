@@ -4,11 +4,16 @@ definitions:
       url:
         type: string
     type: object
+  internal.ShortenURLResp:
+    properties:
+      key:
+        type: string
+    type: object
 info:
   contact:
     email: www.jwpark.co.kr@gmail.com
     name: Curt-Park
-  description: profiling - http://localhost:30000/debug/pprof/
+  description: profiling - http://localhost:8080/debug/pprof/
   title: URL Shortener.
 paths:
   /:
@@ -36,7 +41,8 @@ paths:
       responses:
         "302":
           description: Found
-          schema: {}
+          schema:
+            type: string
         "404":
           description: Not Found
           schema: {}
@@ -58,7 +64,8 @@ paths:
       responses:
         "200":
           description: OK
-          schema: {}
+          schema:
+            $ref: '#/definitions/internal.ShortenURLResp'
         "400":
           description: Bad Request
           schema: {}

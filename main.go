@@ -7,6 +7,8 @@ import (
 
 	internal "github.com/Curt-Park/url-shortener/internal"
 
+	_ "github.com/Curt-Park/url-shortener/docs"
+
 	"github.com/labstack/echo-contrib/pprof"
 	"github.com/labstack/echo-contrib/prometheus"
 	"github.com/labstack/echo/v4"
@@ -20,10 +22,10 @@ var (
 	profile bool
 )
 
-//	@title			URL Shortener.
-//	@description	profiling - http://localhost:30000/debug/pprof/
-//	@contact.name	Curt-Park
-//	@contact.email	www.jwpark.co.kr@gmail.com
+// @title         URL Shortener.
+// @description   profiling - http://localhost:8080/debug/pprof/
+// @contact.name  Curt-Park
+// @contact.email www.jwpark.co.kr@gmail.com
 func main() {
 	// Parse the args.
 	flag.StringVar(&port, "port", "8080", "Service Port. Default: 10000")
@@ -42,6 +44,7 @@ func main() {
 	p.Use(e)
 
 	// Middlewares.
+	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(middleware.Recover())
 	e.Use(middleware.Logger())
 
@@ -51,16 +54,16 @@ func main() {
 	e.GET("/:key", internal.OriginalURL)
 
 	// Start the server
-	e.GET("/swagger/*", echoSwagger.WrapHandler)
+	e.GET("/docs/*", echoSwagger.WrapHandler)
 	e.Logger.Fatal(e.Start(":" + port))
 }
 
-//	@Summary		Healthcheck
-//	@Description	It returns true if the api server is alive.
-//	@Accept			json
-//	@Produce		json
-//	@Success		200	{object}	bool	"API server's liveness"
-//	@Router			/ [get].
+// @Summary     Healthcheck
+// @Description It returns true if the api server is alive.
+// @Accept      json
+// @Produce     json
+// @Success     200 {object} bool "API server's liveness"
+// @Router      / [get].
 func healthcheck(c echo.Context) error {
 	return c.JSON(http.StatusOK, true)
 }

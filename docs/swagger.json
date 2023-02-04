@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "profiling - http://localhost:30000/debug/pprof/",
+        "description": "profiling - http://localhost:8080/debug/pprof/",
         "title": "URL Shortener.",
         "contact": {
             "name": "Curt-Park",
@@ -53,7 +53,9 @@
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "schema": {}
+                        "schema": {
+                            "$ref": "#/definitions/internal.ShortenURLResp"
+                        }
                     },
                     "400": {
                         "description": "Bad Request",
@@ -78,7 +80,9 @@
                 "responses": {
                     "302": {
                         "description": "Found",
-                        "schema": {}
+                        "schema": {
+                            "type": "string"
+                        }
                     },
                     "404": {
                         "description": "Not Found",
@@ -93,6 +97,14 @@
             "type": "object",
             "properties": {
                 "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal.ShortenURLResp": {
+            "type": "object",
+            "properties": {
+                "key": {
                     "type": "string"
                 }
             }

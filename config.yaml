@@ -1,3 +1,4 @@
 RedisServer: "localhost:6379"
 RedisPW: ""
-RedisDB: 0
+RedisShortURLDB: 0
+RedisLongURLDB: 1

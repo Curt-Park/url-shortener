@@ -14,38 +14,35 @@ import (
 
 var (
 	configPath   = os.Getenv("CONFIG")
-	replicaID    = os.Getenv("REPLICA_ID")
-	db           *Database
+	nodeID       = "0" + os.Getenv("NODE_ID")
+	shortURLDB   *Database
+	longURLDB    *Database
 	node         *snowflake.Node
 	enc          *Encoding
 	characterSet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 )
 
 type Config struct {
-	RedisServer string `yaml:"RedisServer"`
-	RedisPW     string `yaml:"RedisPW"`
-	RedisDB     int    `yaml:"RedisDB"`
+	RedisServer     string `yaml:"RedisServer"`
+	RedisPW         string `yaml:"RedisPW"`
+	RedisShortURLDB int    `yaml:"RedisShortURLDB"`
+	RedisLongURLDB  int    `yaml:"RedisLongURLDB"`
 }
 
 func init() {
 	var err error
-	var nodeID int64
+	var nid int
 
 	// Get the unique node id.
-	if len(replicaID) == 0 {
-		nodeID = rand.Int63()
+	if n, err := strconv.Atoi(nodeID); err != nil {
+		nid = rand.Intn(1024)
 	} else {
-		if n, err := strconv.Atoi(replicaID); err != nil {
-			log.Panic(err)
-		} else {
-			nodeID = int64(n)
-		}
+		nid = n % 1024
 	}
-	nodeID %= 1024
 
 	// Create a unique id generator.
-	log.Printf("nodeID: %d", nodeID)
-	node, err = snowflake.NewNode(nodeID)
+	log.Printf("nodeID: %d", nid)
+	node, err = snowflake.NewNode(int64(nid))
 	if err != nil {
 		log.Panic(err)
 	}
@@ -71,8 +68,14 @@ func init() {
 	}
 
 	// Init the db client.
-	log.Printf("Database - server: %s, db: %d", config.RedisServer, config.RedisDB)
-	db = NewDatabase(config.RedisServer, config.RedisPW, config.RedisDB)
+	log.Printf(
+		"Database - server: %s, short url db: %d, long url db: %d",
+		config.RedisServer,
+		config.RedisShortURLDB,
+		config.RedisLongURLDB,
+	)
+	shortURLDB = NewDatabase(config.RedisServer, config.RedisPW, config.RedisShortURLDB)
+	longURLDB = NewDatabase(config.RedisServer, config.RedisPW, config.RedisLongURLDB)
 }
 
 type ShortenURLReq struct {
@@ -83,42 +86,47 @@ type ShortenURLResp struct {
 	Key string `json:"key" form:"key"`
 }
 
-//	@Summary		Shorten the URL.
-//	@Description	Shorten the URL as 11-length Base62 string.
-//	@Accept			json
-//	@Produce		json
-//	@Param			request	body		ShortenURLReq	true	"url"
-//	@Success		200		{object}	error
-//	@Failure		400		{object}	error
-//	@Router			/shorten [post].
+// @Summary     Shorten the URL.
+// @Description Shorten the URL as 11-length Base62 string.
+// @Accept      json
+// @Produce     json
+// @Param       request body     ShortenURLReq true "url"
+// @Success     200     {object} ShortenURLResp
+// @Failure     400     {object} error
+// @Router      /shorten [post].
 func ShortenURL(c echo.Context) error {
 	shortenURLReq := ShortenURLReq{}
 	if err := c.Bind(&shortenURLReq); err != nil {
 		return c.String(http.StatusBadRequest, "Bad Request")
 	}
 
-	// Generate a Base62 unique key.
-	key := generateShortURL()
+	longURL := shortenURLReq.URL
+	key, exist := shortURLDB.Get(longURL)
+	if !exist {
+		// Generate a Base62 unique key.
+		key = generateShortURL()
 
-	// Store the value in the database.
-	db.Set(key, shortenURLReq.URL)
+		// Store the value in the database.
+		shortURLDB.Set(shortenURLReq.URL, key)
+		longURLDB.Set(key, shortenURLReq.URL)
+	}
 
 	return c.JSON(http.StatusOK, ShortenURLResp{Key: key})
 }
 
-//	@Summary		Redirect to the original URL.
-//	@Description	Redirect to the original URL.
-//	@Param			key	path		string	true	"key"
-//	@Success		302	{object}	error
-//	@Failure		404	{object}	error
-//	@Router			/{key} [get].
+// @Summary     Redirect to the original URL.
+// @Description Redirect to the original URL.
+// @Param       key path     string true "key"
+// @Success     302 {object} string
+// @Failure     404 {object} error
+// @Router      /{key} [get].
 func OriginalURL(c echo.Context) error {
 	key := c.Param("key")
-	originalURL, exist := db.Get(key)
+	longURL, exist := longURLDB.Get(key)
 	if !exist {
 		return c.String(http.StatusNotFound, key)
 	}
-	return c.Redirect(http.StatusFound, originalURL)
+	return c.Redirect(http.StatusFound, longURL)
 }
 
 // Helpers
