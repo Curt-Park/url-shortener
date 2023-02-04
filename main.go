@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 
+	internal "github.com/Curt-Park/url-shortener/internal"
+
 	"github.com/labstack/echo-contrib/pprof"
 	"github.com/labstack/echo-contrib/prometheus"
 	"github.com/labstack/echo/v4"
@@ -39,6 +41,8 @@ func main() {
 
 	// APIs
 	e.GET("/", healthcheck)
+	e.POST("/shorten", internal.ShortenURL)
+	e.GET("/:key", internal.OriginalURL)
 
 	// Start the server
 	e.Logger.Fatal(e.Start(":" + port))
