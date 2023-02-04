@@ -1,0 +1,73 @@
+definitions:
+  internal.ShortenURLReq:
+    properties:
+      url:
+        type: string
+    type: object
+  internal.ShortenURLResp:
+    properties:
+      key:
+        type: string
+    type: object
+info:
+  contact:
+    email: www.jwpark.co.kr@gmail.com
+    name: Curt-Park
+  description: profiling - http://localhost:8080/debug/pprof/
+  title: URL Shortener.
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: It returns true if the api server is alive.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API server's liveness
+          schema:
+            type: boolean
+      summary: Healthcheck
+  /{key}:
+    get:
+      description: Redirect to the original URL.
+      parameters:
+      - description: key
+        in: path
+        name: key
+        required: true
+        type: string
+      responses:
+        "302":
+          description: Found
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema: {}
+      summary: Redirect to the original URL.
+  /shorten:
+    post:
+      consumes:
+      - application/json
+      description: Shorten the URL as 11-length Base62 string.
+      parameters:
+      - description: url
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal.ShortenURLReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal.ShortenURLResp'
+        "400":
+          description: Bad Request
+          schema: {}
+      summary: Shorten the URL.
+swagger: "2.0"
