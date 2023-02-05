@@ -54,7 +54,7 @@ charts:
 	helm install loki charts/loki
 	helm install promtail charts/promtail
 	helm install prometheus charts/prometheus
-	helm install redis charts/redis-cluster
+	helm install redis charts/redis
 	helm install url-shortener charts/url-shortener
 
 finalize:
