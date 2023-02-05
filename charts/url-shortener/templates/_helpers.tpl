@@ -24,6 +24,22 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{/*
+  Create server metrics monitor name and fullname derived from
+  above and truncated appropriately.
+*/}}
+{{- define "url-shortener-metrics-monitor.name" -}}
+{{- $basename := include "url-shortener.name" . -}}
+{{- $basename_trimmed := $basename | trunc 47 | trimSuffix "-" -}}
+{{- printf "%s-%s" $basename_trimmed "metrics-monitor" -}}
+{{- end -}}
+
+{{- define "url-shortener-metrics-monitor.fullname" -}}
+{{- $basename := include "url-shortener.fullname" . -}}
+{{- $basename_trimmed := $basename | trunc 47 | trimSuffix "-" -}}
+{{- printf "%s-%s" $basename_trimmed "metrics-monitor" -}}
+{{- end -}}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "url-shortener.chart" -}}
