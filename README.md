@@ -16,6 +16,7 @@
 - [Test](https://github.com/Curt-Park/url-shortener#test)
   - Unit Test
   - Load Test
+- [How to Finalize](https://github.com/Curt-Park/url-shortener#finalize)
 - [Tasks](https://github.com/Curt-Park/url-shortener#tasks)
 - [Commands](https://github.com/Curt-Park/url-shortener#commands)
 
@@ -123,9 +124,9 @@ make charts   # install charts
 # kubectl get pods
 ```
 
-To see grafana dashboard,
+To access grafana and url-shortner w/ localhost,
 ```bash
-kubectl port-forward svc/prometheus-grafana 3000:80
+minikube tunnel
 ```
 
 Open http://localhost:3000/
@@ -152,6 +153,12 @@ Let's configure loki as data sources to monitor the service logs.
 - Ta-da!
 <img width="1266" src="https://user-images.githubusercontent.com/14961526/216816747-602c1d16-b521-4443-beea-9b21316e77ae.png">
 
+- You can see the server metrics as well: `Explore` -> `Prometheus` -> `job` -> `url-shortener` -> `Use query`.
+<img width="1272" src="https://user-images.githubusercontent.com/14961526/216823774-37dadc8e-0b46-4cf8-82bb-208f65b8d3ad.png">
+
+- Ta-da!
+<img width="1266" src="https://user-images.githubusercontent.com/14961526/216823900-46246940-2cce-4b69-af9f-f3404fa32a15.png">
+
 
 ## Test
 ### Unit Tests
@@ -166,9 +173,16 @@ pip install locust  # just at the first beginning
 make ltest
 ```
 
+You need to 
 Open http://localhost:8089/
 
 <img width="674" src="https://user-images.githubusercontent.com/14961526/216804990-87c9b65d-a150-482a-94f5-35e37ee00472.png">
+
+## Finalize
+You can clear the cluster by running:
+```bash
+make finalize
+```
 
 ## Tasks
 - [x] APIs: url shortening, redirection, swagger UI, metrics
@@ -178,10 +192,11 @@ Open http://localhost:8089/
 - [x] Unit Test w/ [echo testing](https://echo.labstack.com/guide/testing/)
 - [x] Load Balancer (k8s)
 - [x] Auto Scaling (k8s)
+- [x] Monitoring: Server Metrics w/ Prometheus & Grafana (k8s)
+- [x] Monitoring: Server Metrics w/ Loki & Grafana (k8s)
+- [x] Load Tests w/ [Locust](https://locust.io/)
 - [ ] Ingress (k8s)
 - [ ] TLS (k8s)
-- [x] Monitoring (k8s)
-- [x] Load Tests w/ [Locust](https://locust.io/)
 
 ## Commands
 ```bash
@@ -198,4 +213,9 @@ make lint           # lint the codes
 make utest          # run unit tests
 make cover          # check the unit test coverage
 make ltest          # load test w/ locust
+
+# k8s
+make cluster        # create a minikube (k8s) cluster
+make charts         # install all services
+make finalize       # finalize the cluster
 ```
