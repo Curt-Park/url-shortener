@@ -1,2 +1,4 @@
 tmp
 *.rdb
+cover.out
+__pycache__

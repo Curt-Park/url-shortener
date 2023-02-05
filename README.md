@@ -98,12 +98,29 @@ $ docker-compose up
 ### Option 3: Kubernetes
 TBD
 
+## Test
+### Unit Tests
+```bash
+make utest
+```
+
+### Load tests
+You will need to install [Python3](https://www.python.org/downloads/) for this.
+```bash
+pip install locust  # just at the first beginning
+make ltest
+```
+
+Open http://localhost:8089/
+
+<img width="674" src="https://user-images.githubusercontent.com/14961526/216804990-87c9b65d-a150-482a-94f5-35e37ee00472.png">
+
 ## Tasks
 - [x] APIs: url shortening, redirection, swagger UI, metrics
 - [x] Code Formatting w/ `make format`
 - [x] Code Linting w/ `make lint`
 - [x] `Dockerfile` and `docker-compose.yaml`
-- [ ] e2e test w/ [echo testing](https://echo.labstack.com/guide/testing/)
+- [x] Unit Test w/ [echo testing](https://echo.labstack.com/guide/testing/)
 - [ ] Load Balancer (k8s)
 - [ ] Auto Scaling (k8s)
 - [ ] Ingress (k8s)
@@ -121,4 +138,9 @@ make setup-dev      # install go packages
 make docs           # generate swagger ui
 make format         # format the codes
 make lint           # lint the codes
+
+# tests
+make utest          # run unit tests
+make cover          # check the unit test coverage
+make ltest          # load test w/ locust
 ```

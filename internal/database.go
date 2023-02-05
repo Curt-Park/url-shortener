@@ -11,6 +11,12 @@ import (
 
 var ctx = context.Background()
 
+type DatabaseOperations interface {
+	Set(key string, value interface{})
+	Get(key string) (string, bool)
+	Delete(key string)
+}
+
 type Database struct {
 	urlDB    *redis.Client
 	urlCache *cache.Cache

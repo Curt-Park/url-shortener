@@ -12,14 +12,18 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+type DBHandler struct {
+	shortURLDB DatabaseOperations
+	longURLDB  DatabaseOperations
+}
+
 var (
-	configPath   = os.Getenv("CONFIG")
+	characterSet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 	nodeID       = "0" + os.Getenv("NODE_ID")
-	shortURLDB   *Database
-	longURLDB    *Database
+	configPath   = os.Getenv("CONFIG")
 	node         *snowflake.Node
 	enc          *Encoding
-	characterSet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+	Handler      *DBHandler
 )
 
 type Config struct {
@@ -74,55 +78,51 @@ func init() {
 		config.RedisShortURLDB,
 		config.RedisLongURLDB,
 	)
-	shortURLDB = NewDatabase(config.RedisServer, config.RedisPW, config.RedisShortURLDB)
-	longURLDB = NewDatabase(config.RedisServer, config.RedisPW, config.RedisLongURLDB)
+
+	// Database handler.
+	Handler = &DBHandler{
+		NewDatabase(config.RedisServer, config.RedisPW, config.RedisShortURLDB),
+		NewDatabase(config.RedisServer, config.RedisPW, config.RedisLongURLDB),
+	}
 }
 
-type ShortenURLReq struct {
-	URL string `json:"url" form:"url"`
-}
-
-type ShortenURLResp struct {
-	Key string `json:"key" form:"key"`
-}
-
-// @Summary     Shorten the URL.
-// @Description Shorten the URL as 11-length Base62 string.
-// @Accept      json
-// @Produce     json
-// @Param       request body     ShortenURLReq true "url"
-// @Success     200     {object} ShortenURLResp
-// @Failure     400     {object} error
-// @Router      /shorten [post].
-func ShortenURL(c echo.Context) error {
+// @Summary		Shorten the URL.
+// @Description	Shorten the URL as 11-length Base62 string.
+// @Accept			json
+// @Produce		json
+// @Param			request	body		ShortenURLReq	true	"url"
+// @Success		200		{object}	ShortenURLResp
+// @Failure		400		{object}	error
+// @Router			/shorten [post].
+func (h *DBHandler) ShortenURL(c echo.Context) error {
 	shortenURLReq := ShortenURLReq{}
 	if err := c.Bind(&shortenURLReq); err != nil {
 		return c.String(http.StatusBadRequest, "Bad Request")
 	}
 
 	longURL := shortenURLReq.URL
-	key, exist := shortURLDB.Get(longURL)
+	key, exist := h.shortURLDB.Get(longURL)
 	if !exist {
 		// Generate a Base62 unique key.
 		key = generateShortURL()
 
 		// Store the value in the database.
-		shortURLDB.Set(shortenURLReq.URL, key)
-		longURLDB.Set(key, shortenURLReq.URL)
+		h.shortURLDB.Set(longURL, key)
+		h.longURLDB.Set(key, longURL)
 	}
 
 	return c.JSON(http.StatusOK, ShortenURLResp{Key: key})
 }
 
-// @Summary     Redirect to the original URL.
-// @Description Redirect to the original URL.
-// @Param       key path     string true "key"
-// @Success     302 {object} string
-// @Failure     404 {object} error
-// @Router      /{key} [get].
-func OriginalURL(c echo.Context) error {
+// @Summary		Redirect to the original URL.
+// @Description	Redirect to the original URL.
+// @Param			key	path		string	true	"key"
+// @Success		302	{object}	string
+// @Failure		404	{object}	error
+// @Router			/{key} [get].
+func (h *DBHandler) OriginalURL(c echo.Context) error {
 	key := c.Param("key")
-	longURL, exist := longURLDB.Get(key)
+	longURL, exist := h.longURLDB.Get(key)
 	if !exist {
 		return c.String(http.StatusNotFound, key)
 	}

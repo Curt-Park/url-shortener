@@ -22,10 +22,10 @@ var (
 	profile bool
 )
 
-// @title         URL Shortener.
-// @description   profiling - http://localhost:8080/debug/pprof/
-// @contact.name  Curt-Park
-// @contact.email www.jwpark.co.kr@gmail.com
+//	@title			URL Shortener.
+//	@description	profiling - http://localhost:8080/debug/pprof/
+//	@contact.name	Curt-Park
+//	@contact.email	www.jwpark.co.kr@gmail.com
 func main() {
 	// Parse the args.
 	flag.StringVar(&port, "port", "8080", "Service Port. Default: 10000")
@@ -50,20 +50,20 @@ func main() {
 
 	// APIs
 	e.GET("/", healthcheck)
-	e.POST("/shorten", internal.ShortenURL)
-	e.GET("/:key", internal.OriginalURL)
+	e.POST("/shorten", internal.Handler.ShortenURL)
+	e.GET("/:key", internal.Handler.OriginalURL)
 
 	// Start the server
 	e.GET("/docs/*", echoSwagger.WrapHandler)
 	e.Logger.Fatal(e.Start(":" + port))
 }
 
-// @Summary     Healthcheck
-// @Description It returns true if the api server is alive.
-// @Accept      json
-// @Produce     json
-// @Success     200 {object} bool "API server's liveness"
-// @Router      / [get].
+//	@Summary		Healthcheck
+//	@Description	It returns true if the api server is alive.
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	bool	"API server's liveness"
+//	@Router			/ [get].
 func healthcheck(c echo.Context) error {
 	return c.JSON(http.StatusOK, true)
 }
