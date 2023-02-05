@@ -39,6 +39,7 @@ ltest:
 # K8s Cluster
 cluster:
 	minikube start --driver=docker --extra-config=kubelet.housekeeping-interval=10s
+	minikube addons enable metrics-server
 
 .PHONY: charts
 charts:

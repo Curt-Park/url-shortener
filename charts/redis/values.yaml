@@ -933,7 +933,7 @@ replica:
   autoscaling:
     ## @param replica.autoscaling.enabled Enable replica autoscaling settings
     ##
-    enabled: false
+    enabled: true
     ## @param replica.autoscaling.minReplicas Minimum replicas for the pod autoscaling
     ##
     minReplicas: 1
@@ -942,7 +942,7 @@ replica:
     maxReplicas: 11
     ## @param replica.autoscaling.targetCPU Percentage of CPU to consider when autoscaling
     ##
-    targetCPU: ""
+    targetCPU: "80"
     ## @param replica.autoscaling.targetMemory Percentage of Memory to consider when autoscaling
     ##
     targetMemory: ""
