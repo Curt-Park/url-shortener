@@ -1,0 +1,5 @@
+# dummy config for unit tests
+RedisServer: ""
+RedisPW: ""
+RedisShortURLDB: 0
+RedisLongURLDB: 1

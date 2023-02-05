@@ -103,7 +103,7 @@ TBD
 - [x] Code Formatting w/ `make format`
 - [x] Code Linting w/ `make lint`
 - [x] `Dockerfile` and `docker-compose.yaml`
-- [ ] e2e test w/ [echo testing](https://echo.labstack.com/guide/testing/)
+- [ ] Unit Test w/ [echo testing](https://echo.labstack.com/guide/testing/)
 - [ ] Load Balancer (k8s)
 - [ ] Auto Scaling (k8s)
 - [ ] Ingress (k8s)

@@ -86,14 +86,14 @@ func init() {
 	}
 }
 
-//	@Summary		Shorten the URL.
-//	@Description	Shorten the URL as 11-length Base62 string.
-//	@Accept			json
-//	@Produce		json
-//	@Param			request	body		ShortenURLReq	true	"url"
-//	@Success		200		{object}	ShortenURLResp
-//	@Failure		400		{object}	error
-//	@Router			/shorten [post].
+// @Summary		Shorten the URL.
+// @Description	Shorten the URL as 11-length Base62 string.
+// @Accept			json
+// @Produce		json
+// @Param			request	body		ShortenURLReq	true	"url"
+// @Success		200		{object}	ShortenURLResp
+// @Failure		400		{object}	error
+// @Router			/shorten [post].
 func (h *DBHandler) ShortenURL(c echo.Context) error {
 	shortenURLReq := ShortenURLReq{}
 	if err := c.Bind(&shortenURLReq); err != nil {
@@ -114,12 +114,12 @@ func (h *DBHandler) ShortenURL(c echo.Context) error {
 	return c.JSON(http.StatusOK, ShortenURLResp{Key: key})
 }
 
-//	@Summary		Redirect to the original URL.
-//	@Description	Redirect to the original URL.
-//	@Param			key	path		string	true	"key"
-//	@Success		302	{object}	string
-//	@Failure		404	{object}	error
-//	@Router			/{key} [get].
+// @Summary		Redirect to the original URL.
+// @Description	Redirect to the original URL.
+// @Param			key	path		string	true	"key"
+// @Success		302	{object}	string
+// @Failure		404	{object}	error
+// @Router			/{key} [get].
 func (h *DBHandler) OriginalURL(c echo.Context) error {
 	key := c.Param("key")
 	longURL, exist := h.longURLDB.Get(key)

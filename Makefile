@@ -21,3 +21,8 @@ format:
 
 lint:
 	golangci-lint run
+
+.PHONY: utest
+utest:
+	# Run `go help testflag` to see details
+	go test -v -cover $(ARGS) ./internal
