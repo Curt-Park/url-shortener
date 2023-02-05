@@ -1,10 +1,29 @@
 # URL Shortener Service
 
+## Contents
+- [Requirements](https://github.com/Curt-Park/url-shortener#requirements)
+- [APIs](https://github.com/Curt-Park/url-shortener#apis)
+- [System Design](https://github.com/Curt-Park/url-shortener#system-design)
+  - Overview
+  - URL Shortening
+- [Sequence Diagram](https://github.com/Curt-Park/url-shortener#sequence-diagram)
+  - URL Shortening
+  - URL Redirection
+- [How to Run](https://github.com/Curt-Park/url-shortener#how-to-run)
+  - Host OS
+  - Docker
+  - Kubernetes
+- [Test](https://github.com/Curt-Park/url-shortener#test)
+  - Unit Test
+  - Load Test
+- [Tasks](https://github.com/Curt-Park/url-shortener#tasks)
+- [Commands](https://github.com/Curt-Park/url-shortener#commands)
+
 ## Requirements
 - It shortens the given URLs.
 - It redirects to the original URL by getting a shortened URL.
 - It provides metrics for monitoring.
-- Scalability, Availability, Reliability
+- Scalability, Availability, Reliability.
 
 ## APIs
 ```bash
@@ -82,7 +101,7 @@ sequenceDiagram
 ```
 
 ## How to Run
-### Option 1: Localhost
+### Option 1: Host OS
 Install [redis](https://redis.io/docs/getting-started/installation/), [golang](https://go.dev/doc/install), and run:
 ```bash
 $ redis-server
@@ -126,7 +145,7 @@ Open http://localhost:8089/
 - [ ] Ingress (k8s)
 - [ ] SSL (k8s)
 - [ ] Monitoring (k8s)
-- [ ] Load Tests w/ [Locust](https://locust.io/)
+- [x] Load Tests w/ [Locust](https://locust.io/)
 
 ## Commands
 ```bash
