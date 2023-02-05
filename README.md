@@ -121,4 +121,6 @@ make setup-dev      # install go packages
 make docs           # generate swagger ui
 make format         # format the codes
 make lint           # lint the codes
+make utest          # run unit tests
+make cover          # check the unit test coverage
 ```

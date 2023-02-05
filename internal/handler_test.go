@@ -52,7 +52,7 @@ func TestShortenURL(t *testing.T) {
 	if assert.NoError(t, h.ShortenURL(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 		err := json.NewDecoder(rec.Body).Decode(&firstResp)
-		assert.Equal(t, err, nil)
+		assert.Equal(t, nil, err)
 		assert.True(t, r.MatchString(firstResp.Key))
 	}
 
@@ -65,7 +65,48 @@ func TestShortenURL(t *testing.T) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 		resp := ShortenURLResp{}
 		err := json.NewDecoder(rec.Body).Decode(&resp)
-		assert.Equal(t, err, nil)
-		assert.Equal(t, resp, firstResp)
+		assert.Equal(t, nil, err)
+		assert.Equal(t, firstResp, resp)
+	}
+}
+
+func TestOriginalURL(t *testing.T) {
+	// Init DB.
+	h := &DBHandler{
+		shortURLDB: &DatabaseMock{make(map[string]interface{})},
+		longURLDB:  &DatabaseMock{make(map[string]interface{})},
+	}
+
+	// Init URL info.
+	long := "https://www.longlonglong-url.com/"
+	short := "M8urCp1G000"
+	h.longURLDB.Set(short, long)
+
+	// Setup.
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("/:key")
+	c.SetParamNames("key")
+	c.SetParamValues(short)
+
+	// Assertions.
+	if assert.NoError(t, h.OriginalURL(c)) {
+		assert.Equal(t, http.StatusFound, rec.Code)
+		assert.Equal(t, long, rec.HeaderMap.Get("Location"))
+	}
+
+	// 2nd w/ a value not existing.
+	req = httptest.NewRequest(http.MethodGet, "/", nil)
+	rec = httptest.NewRecorder()
+	c = e.NewContext(req, rec)
+	c.SetPath("/:key")
+	c.SetParamNames("key")
+	c.SetParamValues(short + "1")
+
+	// Assertions.
+	if assert.NoError(t, h.OriginalURL(c)) {
+		assert.Equal(t, http.StatusNotFound, rec.Code)
 	}
 }
