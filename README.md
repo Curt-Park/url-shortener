@@ -115,7 +115,20 @@ $ docker-compose up
 ```
 
 ### Option 3: Kubernetes
-TBD
+Install [minikube]() and run:
+```bash
+make cluster  # init the k8s cluster
+make charts   # install charts
+```
+
+To see grafana dashboard,
+```bash
+kubectl port-forward svc/prometheus-grafana 3000:80
+```
+
+Open http://localhost:3000/
+- id: admin
+- pw: prom-operator
 
 ## Test
 ### Unit Tests

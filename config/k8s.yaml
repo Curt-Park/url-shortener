@@ -1,0 +1,4 @@
+RedisServer: "redis.default.svc.cluster.local:6379"
+RedisPW: ""
+RedisShortURLDB: 0
+RedisLongURLDB: 1
