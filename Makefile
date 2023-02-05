@@ -45,13 +45,16 @@ charts:
 	# `helm uninstall name` for removal
 	helm repo add grafana https://grafana.github.io/helm-charts
 	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+	helm repo add bitnami https://charts.bitnami.com/bitnami
 	helm dependency build charts/loki
 	helm dependency build charts/promtail
 	helm dependency build charts/prometheus
 	helm dependency build charts/url-shortener
+	helm dependency build charts/redis-cluster
 	helm install loki charts/loki
 	helm install promtail charts/promtail
 	helm install prometheus charts/prometheus
+	helm install redis charts/redis-cluster
 	helm install url-shortener charts/url-shortener
 
 finalize:
