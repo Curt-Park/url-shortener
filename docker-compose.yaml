@@ -16,8 +16,8 @@ services:
     container_name: url-shortener
     ports:
       - 8080:8080
-    volumes:
-      - ./config/docker.yaml:/config/default.yaml
+    environment:
+      CONFIG: "config/docker.yaml" 
     depends_on:
       redis:
         condition: service_healthy

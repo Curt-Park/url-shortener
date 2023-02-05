@@ -2,6 +2,7 @@
 
 ## Contents
 - [Requirements](https://github.com/Curt-Park/url-shortener#requirements)
+- [Tasks](https://github.com/Curt-Park/url-shortener#tasks)
 - [APIs](https://github.com/Curt-Park/url-shortener#apis)
 - [System Design](https://github.com/Curt-Park/url-shortener#system-design)
   - Overview
@@ -16,7 +17,7 @@
 - [Test](https://github.com/Curt-Park/url-shortener#test)
   - Unit Test
   - Load Test
-- [Tasks](https://github.com/Curt-Park/url-shortener#tasks)
+- [How to Finalize](https://github.com/Curt-Park/url-shortener#finalize)
 - [Commands](https://github.com/Curt-Park/url-shortener#commands)
 
 ## Requirements
@@ -24,6 +25,21 @@
 - It redirects to the original URL by getting a shortened URL.
 - It provides metrics for monitoring.
 - Scalability, Availability, Reliability.
+
+## Tasks
+- [x] APIs: url shortening, redirection, swagger UI, metrics
+- [x] Code Formatting w/ `make format`
+- [x] Code Linting w/ `make lint`
+- [x] `Dockerfile` and `docker-compose.yaml`
+- [x] Unit Test w/ [echo testing](https://echo.labstack.com/guide/testing/)
+- [x] Load Balancer (k8s)
+- [x] Auto Scaling (k8s)
+- [x] Monitoring: Server Metrics w/ Prometheus & Grafana (k8s)
+- [x] Monitoring: Server Metrics w/ Loki & Grafana (k8s)
+- [x] Load Tests w/ [Locust](https://locust.io/)
+- [ ] Redis Performance Enhancement on K8s
+- [ ] Ingress (k8s)
+- [ ] TLS (k8s)
 
 ## APIs
 ```bash
@@ -115,7 +131,49 @@ $ docker-compose up
 ```
 
 ### Option 3: Kubernetes
-TBD
+Install [minikube](https://minikube.sigs.k8s.io/docs/start/) and run:
+```bash
+make cluster  # init the k8s cluster
+make charts   # install charts
+# Check all pods are running
+# kubectl get pods
+```
+
+To access grafana and url-shortner w/ localhost,
+```bash
+minikube tunnel
+```
+
+Open http://localhost:3000/
+- id: admin
+- pw: prom-operator
+
+Let's configure loki as data sources to monitor the service logs.
+- `Configuration` -> `Data sources` -> `Add data sources`
+<img width="1265" src="https://user-images.githubusercontent.com/14961526/216816479-f871210f-1e2c-4f19-9bf4-0c474a8d9d0c.png">
+
+- Select `Loki`
+<img width="1263" src="https://user-images.githubusercontent.com/14961526/216816488-bc04d4e8-a225-4b7c-89a0-3bcdd25418e1.png">
+
+- Add URL: http://loki.default.svc.cluster.local:3100
+- Click `Save & test` on the bottom.
+<img width="1265" src="https://user-images.githubusercontent.com/14961526/216816493-e347117b-32bd-4b6a-9a4b-d8510c379bb5.png">
+
+- `Explore` -> Select `Loki`
+<img width="1272" src="https://user-images.githubusercontent.com/14961526/216816674-57e01451-d5fe-4701-a61b-aa5cd645a478.png">
+
+- `job` -> `default/url-shortner` -> `Show logs`
+<img width="1270" src="https://user-images.githubusercontent.com/14961526/216816693-551b05c8-b47a-4746-bb00-8c04d0909d0f.png">
+
+- Ta-da!
+<img width="1266" src="https://user-images.githubusercontent.com/14961526/216816747-602c1d16-b521-4443-beea-9b21316e77ae.png">
+
+- You can see the server metrics as well: `Explore` -> `Prometheus` -> `job` -> `url-shortener` -> `Use query`.
+<img width="1272" src="https://user-images.githubusercontent.com/14961526/216823774-37dadc8e-0b46-4cf8-82bb-208f65b8d3ad.png">
+
+- Ta-da!
+<img width="1266" src="https://user-images.githubusercontent.com/14961526/216823900-46246940-2cce-4b69-af9f-f3404fa32a15.png">
+
 
 ## Test
 ### Unit Tests
@@ -130,22 +188,21 @@ pip install locust  # just at the first beginning
 make ltest
 ```
 
+You need to 
 Open http://localhost:8089/
 
 <img width="674" src="https://user-images.githubusercontent.com/14961526/216804990-87c9b65d-a150-482a-94f5-35e37ee00472.png">
 
-## Tasks
-- [x] APIs: url shortening, redirection, swagger UI, metrics
-- [x] Code Formatting w/ `make format`
-- [x] Code Linting w/ `make lint`
-- [x] `Dockerfile` and `docker-compose.yaml`
-- [x] Unit Test w/ [echo testing](https://echo.labstack.com/guide/testing/)
-- [ ] Load Balancer (k8s)
-- [ ] Auto Scaling (k8s)
-- [ ] Ingress (k8s)
-- [ ] SSL (k8s)
-- [ ] Monitoring (k8s)
-- [x] Load Tests w/ [Locust](https://locust.io/)
+Scenario: Every v-user sends a request of shortening URL or redirection once a second.
+<img width="1256" src="https://user-images.githubusercontent.com/14961526/216828886-fd315b19-b19c-4d1c-889f-880276d87fa8.png">
+- tests with `docker-compose.yaml`
+- Mac Mini 2020
+
+## Finalize
+You can clear the cluster by running:
+```bash
+make finalize
+```
 
 ## Commands
 ```bash
@@ -162,4 +219,9 @@ make lint           # lint the codes
 make utest          # run unit tests
 make cover          # check the unit test coverage
 make ltest          # load test w/ locust
+
+# k8s
+make cluster        # create a minikube (k8s) cluster
+make charts         # install all services
+make finalize       # finalize the cluster
 ```

@@ -1,0 +1,20 @@
+kube-prometheus-stack:
+  prometheus:
+    prometheusSpec:
+      serviceMonitorSelectorNilUsesHelmValues: false
+      additionalScrapeConfigs:
+        - job_name: url-shortener
+          scrape_interval: 15s
+          metrics_path: /metrics
+          scheme: http
+          kubernetes_sd_configs:
+          - role: endpoints
+          relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            action: replace
+            target_label: kubernetes_node
+  grafana:
+    adminPassword: prom-operator
+    service:
+      type: LoadBalancer
+      port: 3000
