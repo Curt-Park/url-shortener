@@ -113,6 +113,8 @@ make ltest
 
 Open http://localhost:8089/
 
+<img width="674" src="https://user-images.githubusercontent.com/14961526/216804990-87c9b65d-a150-482a-94f5-35e37ee00472.png">
+
 ## Tasks
 - [x] APIs: url shortening, redirection, swagger UI, metrics
 - [x] Code Formatting w/ `make format`
