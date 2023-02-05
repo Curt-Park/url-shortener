@@ -6,6 +6,27 @@
 - It provides metrics for monitoring.
 - Scalability, Availability, Reliability
 
+## APIs
+```bash
+POST /shorten  # it returns a key value for shortened url
+GET  /:key     # it redirects to the original url
+GET  /docs     # swagger UI
+GET  /metrics  # prometheus metrics
+```
+
+You can simply test it with `curl`.
+```bash
+$ curl -X 'POST' 'http://localhost:8080/shorten' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{ "url": "https://www.google.com/search?q=longlonglonglonglonglonglonglonglonglonglongurl" }'
+
+{"key":"M8uIUx0W000"}
+```
+
+Go to http://localhost:8080/M8uIUx0W000 on your browser.
+<img width="889" src="https://user-images.githubusercontent.com/14961526/216797605-61d64f76-0274-4dc5-a5c1-4df5aa23aca9.png">
+
 ## System Design
 ### Overview
 ![](https://user-images.githubusercontent.com/14961526/216781438-17cb9424-6239-4a37-94f0-14f18b0991c0.jpg)
@@ -18,9 +39,9 @@ flowchart TD
   Start --> A
   A[Input: originalURL] --> B{Is it in DB?}
   B -->|Yes| C[Return the key for the short URL from DB]
-  B -->|No| D[Generate an unique int64 value - snowflake]
+  B -->|No| D[Generate an unique int64 value with snowflake]
   D --> E[Convert the unique key into a Base62 string]
-  E --> F[Store the originalURL and the key in DB]
+  E --> F[Store the originalURL and the key]
   F --> C
   C --> End
 ```
@@ -77,13 +98,18 @@ $ docker-compose up
 ### Option 3: Kubernetes
 TBD
 
-## API
-```bash
-POST /shorten  	# it returns a key value for shortened url
-GET  /:key		# it redirects to the original url
-GET  /docs		# swagger UI
-GET  /metrics	# prometheus metrics
-```
+## Tasks
+- [x] APIs: url shortening, redirection, swagger UI, metrics
+- [x] Code Formatting w/ `make format`
+- [x] Code Linting w/ `make lint`
+- [x] `Dockerfile` and `docker-compose.yaml`
+- [ ] e2e test w/ [echo testing](https://echo.labstack.com/guide/testing/)
+- [ ] Load Balancer (k8s)
+- [ ] Auto Scaling (k8s)
+- [ ] Ingress (k8s)
+- [ ] SSL (k8s)
+- [ ] Monitoring (k8s)
+- [ ] Load Tests w/ [Locust](https://locust.io/)
 
 ## Commands
 ```bash
