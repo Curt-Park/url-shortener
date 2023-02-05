@@ -15,8 +15,8 @@ import (
 var (
 	configPath   = os.Getenv("CONFIG")
 	nodeID       = "0" + os.Getenv("NODE_ID")
-	shortURLDB   *Database
-	longURLDB    *Database
+	shortURLDB   DatabaseOperations
+	longURLDB    DatabaseOperations
 	node         *snowflake.Node
 	enc          *Encoding
 	characterSet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -101,15 +101,7 @@ func ShortenURL(c echo.Context) error {
 	}
 
 	longURL := shortenURLReq.URL
-	key, exist := shortURLDB.Get(longURL)
-	if !exist {
-		// Generate a Base62 unique key.
-		key = generateShortURL()
-
-		// Store the value in the database.
-		shortURLDB.Set(shortenURLReq.URL, key)
-		longURLDB.Set(key, shortenURLReq.URL)
-	}
+	key := shortenURL(longURL, shortURLDB, longURLDB)
 
 	return c.JSON(http.StatusOK, ShortenURLResp{Key: key})
 }
@@ -122,30 +114,9 @@ func ShortenURL(c echo.Context) error {
 // @Router      /{key} [get].
 func OriginalURL(c echo.Context) error {
 	key := c.Param("key")
-	longURL, exist := longURLDB.Get(key)
-	if !exist {
+	longURL, err := originalURL(key, longURLDB)
+	if err != nil {
 		return c.String(http.StatusNotFound, key)
 	}
 	return c.Redirect(http.StatusFound, longURL)
-}
-
-// Helpers
-func generateShortURL() string {
-	// Generate a snowflake ID.
-	id := node.Generate()
-	id_bytes := []byte{
-		byte(0xff & id),
-		byte(0xff & (id >> 8)),
-		byte(0xff & (id >> 16)),
-		byte(0xff & (id >> 24)),
-		byte(0xff & (id >> 32)),
-		byte(0xff & (id >> 40)),
-		byte(0xff & (id >> 48)),
-		byte(0xff & (id >> 56)),
-	}
-
-	// Convert to Base62.
-	key := enc.EncodeToString(id_bytes)
-
-	return key
 }
