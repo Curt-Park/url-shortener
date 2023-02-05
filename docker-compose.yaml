@@ -18,8 +18,6 @@ services:
       - 8080:8080
     environment:
       CONFIG: "config/docker.yaml" 
-    volumes:
-      - ./config/docker.yaml:/config/default.yaml
     depends_on:
       redis:
         condition: service_healthy

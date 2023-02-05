@@ -84,6 +84,7 @@ loki:
       name: storage
 
 pvc:
+  # use `local-path` for storageClassName in native k8s
   storageClassName: standard  # for minikube
   accessModes:
     - ReadWriteOnce

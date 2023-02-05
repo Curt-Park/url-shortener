@@ -40,15 +40,22 @@ spec:
 		  {{- with .Values.deployment.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
-          {{- end}}
+          {{- end }}
           {{- with .Values.deployment.readinessProbe }}
           readinessProbe:
             {{- toYaml . | nindent 12 }}
-          {{- end}}
+          {{- end }}
+          {{- with .Values.resources }}
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-		  env:
-            {{- toYaml .Values.deployment.env | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.env }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.entrypoint }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -10,5 +10,5 @@ RUN go build main.go
 
 FROM scratch
 COPY --from=builder /build/main .
-COPY config /config
+COPY --from=builder /build/config config
 ENTRYPOINT ["/main"]

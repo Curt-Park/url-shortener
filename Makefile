@@ -48,9 +48,11 @@ charts:
 	helm dependency build charts/loki
 	helm dependency build charts/promtail
 	helm dependency build charts/prometheus
+	helm dependency build charts/url-shortener
 	helm install loki charts/loki
 	helm install promtail charts/promtail
 	helm install prometheus charts/prometheus
+	helm install url-shortener charts/url-shortener
 
 finalize:
 	minikube delete
