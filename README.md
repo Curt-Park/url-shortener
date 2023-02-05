@@ -2,6 +2,7 @@
 
 ## Contents
 - [Requirements](https://github.com/Curt-Park/url-shortener#requirements)
+- [Tasks](https://github.com/Curt-Park/url-shortener#tasks)
 - [APIs](https://github.com/Curt-Park/url-shortener#apis)
 - [System Design](https://github.com/Curt-Park/url-shortener#system-design)
   - Overview
@@ -17,7 +18,6 @@
   - Unit Test
   - Load Test
 - [How to Finalize](https://github.com/Curt-Park/url-shortener#finalize)
-- [Tasks](https://github.com/Curt-Park/url-shortener#tasks)
 - [Commands](https://github.com/Curt-Park/url-shortener#commands)
 
 ## Requirements
@@ -25,6 +25,21 @@
 - It redirects to the original URL by getting a shortened URL.
 - It provides metrics for monitoring.
 - Scalability, Availability, Reliability.
+
+## Tasks
+- [x] APIs: url shortening, redirection, swagger UI, metrics
+- [x] Code Formatting w/ `make format`
+- [x] Code Linting w/ `make lint`
+- [x] `Dockerfile` and `docker-compose.yaml`
+- [x] Unit Test w/ [echo testing](https://echo.labstack.com/guide/testing/)
+- [x] Load Balancer (k8s)
+- [x] Auto Scaling (k8s)
+- [x] Monitoring: Server Metrics w/ Prometheus & Grafana (k8s)
+- [x] Monitoring: Server Metrics w/ Loki & Grafana (k8s)
+- [x] Load Tests w/ [Locust](https://locust.io/)
+- [ ] Redis Performance Enhancement on K8s
+- [ ] Ingress (k8s)
+- [ ] TLS (k8s)
 
 ## APIs
 ```bash
@@ -178,25 +193,16 @@ Open http://localhost:8089/
 
 <img width="674" src="https://user-images.githubusercontent.com/14961526/216804990-87c9b65d-a150-482a-94f5-35e37ee00472.png">
 
+Scenario: Every v-user sends a request of shortening URL or redirection once a second.
+<img width="1256" src="https://user-images.githubusercontent.com/14961526/216828886-fd315b19-b19c-4d1c-889f-880276d87fa8.png">
+- tests with `docker-compose.yaml`
+- Mac Mini 2020
+
 ## Finalize
 You can clear the cluster by running:
 ```bash
 make finalize
 ```
-
-## Tasks
-- [x] APIs: url shortening, redirection, swagger UI, metrics
-- [x] Code Formatting w/ `make format`
-- [x] Code Linting w/ `make lint`
-- [x] `Dockerfile` and `docker-compose.yaml`
-- [x] Unit Test w/ [echo testing](https://echo.labstack.com/guide/testing/)
-- [x] Load Balancer (k8s)
-- [x] Auto Scaling (k8s)
-- [x] Monitoring: Server Metrics w/ Prometheus & Grafana (k8s)
-- [x] Monitoring: Server Metrics w/ Loki & Grafana (k8s)
-- [x] Load Tests w/ [Locust](https://locust.io/)
-- [ ] Ingress (k8s)
-- [ ] TLS (k8s)
 
 ## Commands
 ```bash
