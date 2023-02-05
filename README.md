@@ -115,10 +115,12 @@ $ docker-compose up
 ```
 
 ### Option 3: Kubernetes
-Install [minikube]() and run:
+Install [minikube](https://minikube.sigs.k8s.io/docs/start/) and run:
 ```bash
 make cluster  # init the k8s cluster
 make charts   # install charts
+# Check all pods are running
+# kubectl get pods
 ```
 
 To see grafana dashboard,
@@ -129,6 +131,27 @@ kubectl port-forward svc/prometheus-grafana 3000:80
 Open http://localhost:3000/
 - id: admin
 - pw: prom-operator
+
+Let's configure loki as data sources to monitor the service logs.
+- `Configuration` -> `Data sources` -> `Add data sources`
+<img width="1265" src="https://user-images.githubusercontent.com/14961526/216816479-f871210f-1e2c-4f19-9bf4-0c474a8d9d0c.png">
+
+- Select `Loki`
+<img width="1263" src="https://user-images.githubusercontent.com/14961526/216816488-bc04d4e8-a225-4b7c-89a0-3bcdd25418e1.png">
+
+- Add URL: http://loki.default.svc.cluster.local:3100
+- Click `Save & test` on the bottom.
+<img width="1265" src="https://user-images.githubusercontent.com/14961526/216816493-e347117b-32bd-4b6a-9a4b-d8510c379bb5.png">
+
+- `Explore` -> Select `Loki`
+<img width="1272" src="https://user-images.githubusercontent.com/14961526/216816674-57e01451-d5fe-4701-a61b-aa5cd645a478.png">
+
+- `job` -> `default/url-shortner` -> `Show logs`
+<img width="1270" src="https://user-images.githubusercontent.com/14961526/216816693-551b05c8-b47a-4746-bb00-8c04d0909d0f.png">
+
+- Ta-da!
+<img width="1266" src="https://user-images.githubusercontent.com/14961526/216816747-602c1d16-b521-4443-beea-9b21316e77ae.png">
+
 
 ## Test
 ### Unit Tests
@@ -153,11 +176,11 @@ Open http://localhost:8089/
 - [x] Code Linting w/ `make lint`
 - [x] `Dockerfile` and `docker-compose.yaml`
 - [x] Unit Test w/ [echo testing](https://echo.labstack.com/guide/testing/)
-- [ ] Load Balancer (k8s)
-- [ ] Auto Scaling (k8s)
+- [x] Load Balancer (k8s)
+- [x] Auto Scaling (k8s)
 - [ ] Ingress (k8s)
-- [ ] SSL (k8s)
-- [ ] Monitoring (k8s)
+- [ ] TLS (k8s)
+- [x] Monitoring (k8s)
 - [x] Load Tests w/ [Locust](https://locust.io/)
 
 ## Commands
