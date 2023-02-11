@@ -51,12 +51,19 @@ charts:
 	helm dependency build charts/promtail
 	helm dependency build charts/prometheus
 	helm dependency build charts/url-shortener
-	helm dependency build charts/redis-cluster
-	helm install loki charts/loki
+	helm dependency build charts/redis
 	helm install promtail charts/promtail
+	helm install loki charts/loki
 	helm install prometheus charts/prometheus
 	helm install redis charts/redis
 	helm install url-shortener charts/url-shortener
+
+remove-charts:
+	helm uninstall url-shortener || true
+	helm uninstall redis || true
+	helm uninstall prometheus || true
+	helm uninstall loki || true
+	helm uninstall promtail || true
 
 finalize:
 	minikube delete

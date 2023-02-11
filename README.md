@@ -223,5 +223,6 @@ make ltest          # load test w/ locust
 # k8s
 make cluster        # create a minikube (k8s) cluster
 make charts         # install all services
+make remove-charts  # remove all services
 make finalize       # finalize the cluster
 ```
