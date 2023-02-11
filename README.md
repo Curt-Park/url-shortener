@@ -37,7 +37,7 @@
 - [x] Monitoring: Server Metrics w/ Prometheus & Grafana (k8s)
 - [x] Monitoring: Server Metrics w/ Loki & Grafana (k8s)
 - [x] Load Tests w/ [Locust](https://locust.io/)
-- [ ] Redis Performance Enhancement on K8s
+- [x] Redis Performance Enhancement on K8s
 - [ ] Ingress (k8s)
 - [ ] TLS (k8s)
 
@@ -188,7 +188,7 @@ pip install locust  # just at the first beginning
 make ltest
 ```
 
-You need to 
+You need to
 Open http://localhost:8089/
 
 <img width="674" src="https://user-images.githubusercontent.com/14961526/216804990-87c9b65d-a150-482a-94f5-35e37ee00472.png">
@@ -197,6 +197,8 @@ Scenario: Every v-user sends a request of shortening URL or redirection once a s
 <img width="1256" src="https://user-images.githubusercontent.com/14961526/216828886-fd315b19-b19c-4d1c-889f-880276d87fa8.png">
 - tests with `docker-compose.yaml`
 - Mac Mini 2020
+
+NOTE: By default, minikube starts with 2 CPUs and 2GB of memory, so it shows lower performance than docker-compose settings.
 
 ## Finalize
 You can clear the cluster by running:
