@@ -38,7 +38,7 @@
 - [x] Monitoring: Server Logs w/ Promtail & Loki & Grafana (k8s)
 - [x] Load Tests w/ [Locust](https://locust.io/)
 - [x] Redis failure on M1 mac (k8s - minikube)
-- [x] Ingress (k8s)
+- [x] Ingress w/ Traefik (k8s)
 - [ ] TLS (k8s)
 - [ ] Frontend
 
