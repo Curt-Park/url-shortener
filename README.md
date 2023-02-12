@@ -165,13 +165,12 @@ minikube tunnel
 ```
 
 Now, you can access `url-shortener` service through http://url-shortener.local/ .
+
 To open swagger UI, open http://url-shortener.local/docs/index.html
 
 #### Access to Grafana
-The following command will open Grafana on the web-browser:
-```bash
-minikube service prometheus-grafana
-```
+Open Grafana on the web-browser:
+http://url-shortener.local:3000/
 
 - id: admin
 - pw: prom-operator

@@ -16,7 +16,7 @@ kube-prometheus-stack:
   grafana:
     adminPassword: prom-operator
     service:
-      type: ClusterIP
+      type: LoadBalancer
       port: 3000
 
   ingress:
