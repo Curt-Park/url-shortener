@@ -40,13 +40,15 @@ ltest:
 cluster:
 	minikube start --driver=docker --extra-config=kubelet.housekeeping-interval=10s
 	minikube addons enable metrics-server
+	kubectl apply -f ingress
+	helm repo add grafana https://grafana.github.io/helm-charts
+	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+	helm repo add bitnami https://charts.bitnami.com/bitnami
+	helm repo update
 
 .PHONY: charts
 charts:
 	# `helm uninstall name` for removal
-	helm repo add grafana https://grafana.github.io/helm-charts
-	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-	helm repo add bitnami https://charts.bitnami.com/bitnami
 	helm dependency build charts/loki
 	helm dependency build charts/promtail
 	helm dependency build charts/prometheus
