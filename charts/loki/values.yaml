@@ -1,54 +1,14 @@
+read:
+  replicas: 1
+write:
+  replicas: 1
+
 loki:
-  image:
-    repository: grafana/loki
-    tag: 2.4.1
-    pullPolicy: IfNotPresent
-
   auth_enabled: false
-
-  memberlist:
-    join_members:
-      # the value must be defined as string to be evaluated when secret manifest is being generating
-      - '{{ include "loki.fullname" . }}-memberlist'
-
-  ingester:
-    wal:
-      enabled: true
-      dir: /data/loki
-    lifecycler:
-      ring:
-        replication_factor: 1
-
-  schema_config:
-    configs:
-    - from: 2022-08-01
-      store: boltdb-shipper
-      object_store: filesystem
-      schema: v11
-      index:
-        prefix: index_
-        period: 24h
-      chunks:
-        period: 24h
-
-  server:
-    http_listen_port: 3100
-    grpc_listen_port: 9095
-
-  storage_config:
-    boltdb_shipper:
-      active_index_directory: /data/loki/boltdb-shipper-active
-      cache_location: /data/loki/boltdb-shipper-cache
-      cache_ttl: 24h         # Can be increased for faster performance over longer query periods, uses more disk space
-      shared_store: filesystem
-    filesystem:
-      directory: /data/loki/chunks
-
-  compactor:
-    working_directory: /data/loki
-    retention_enabled: true
-  limits_config:
-    retention_period: 168h
+  commonConfig:
+    replication_factor: 1
+  storage:
+    type: "filesystem"
 
   # NOTE: To maintain log files, pvc is used.
   persistence:
@@ -56,36 +16,11 @@ loki:
     accessModes:
     - ReadWriteOnce
     size: 10Gi
-    labels: {}
-    annotations: {}
     selector:
       matchLabels:
         app.kubernetes.io/name: loki
-    # subPath: ""
     existingClaim: grafana-loki
     storageClassName: standard
-
-  # NOTE: When pvc is used, permission issue occurs
-  # Reference: https://github.com/grafana/loki/issues/2018
-  initContainers:
-  - name: fix-permissions
-    image: busybox:latest
-    securityContext:
-      privileged: true
-      runAsGroup: 0
-      runAsNonRoot: false
-      runAsUser: 0
-    command:
-    - sh
-    - -c
-    - >-
-      id;
-      ls -la /data/;
-      mkdir -p /data/loki;
-      chown 10001:10001 /data/loki
-    volumeMounts:
-    - mountPath: /data
-      name: storage
 
 pvc:
   # use `local-path` for storageClassName in native k8s
