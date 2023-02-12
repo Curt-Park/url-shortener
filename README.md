@@ -123,12 +123,19 @@ Install [redis](https://redis.io/docs/getting-started/installation/), [golang](h
 $ redis-server
 $ make run  # in another terminal
 ```
+This repository is tested on:
+- redis-server: v7.0.5
+- M1 MacMini (2020)
 
 ### Option 2: Docker
 Install [docker](https://docs.docker.com/engine/install/) and run:
 ```bash
 $ docker-compose up
 ```
+This repository is tested on:
+- docker engine: v20.10.12
+- docker-compose: v1.29.2
+- M1 MacMini (2020)
 
 ### Option 3: Kubernetes
 Install [minikube](https://minikube.sigs.k8s.io/docs/start/) and run:
@@ -138,6 +145,10 @@ make charts   # install charts
 # Check all pods are running
 # kubectl get pods
 ```
+This repository is tested on:
+- minikube v1.29.0
+- kubectl 1.26.1
+- M1 MacMini (2020)
 
 To access grafana and url-shortner w/ localhost,
 ```bash
