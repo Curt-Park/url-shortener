@@ -37,7 +37,7 @@
 - [x] Monitoring: Server Metrics w/ Prometheus & Grafana (k8s)
 - [x] Monitoring: Server Metrics w/ Loki & Grafana (k8s)
 - [x] Load Tests w/ [Locust](https://locust.io/)
-- [x] Redis Performance Enhancement on K8s
+- [x] Redis failure on M1 mac (minikube)
 - [x] Ingress (k8s)
 - [ ] TLS (k8s)
 
