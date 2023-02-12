@@ -38,7 +38,7 @@
 - [x] Monitoring: Server Metrics w/ Loki & Grafana (k8s)
 - [x] Load Tests w/ [Locust](https://locust.io/)
 - [x] Redis Performance Enhancement on K8s
-- [ ] Ingress (k8s)
+- [x] Ingress (k8s)
 - [ ] TLS (k8s)
 
 ## APIs
@@ -118,26 +118,33 @@ sequenceDiagram
 
 ## How to Run
 ### Option 1: Host OS
+This repository is tested on:
+- redis-server: v7.0.5
+- M1 MacMini (2020)
+
 Install [redis](https://redis.io/docs/getting-started/installation/), [golang](https://go.dev/doc/install), and run:
 ```bash
 $ redis-server
 $ make run  # in another terminal
 ```
-This repository is tested on:
-- redis-server: v7.0.5
-- M1 MacMini (2020)
 
 ### Option 2: Docker
-Install [docker](https://docs.docker.com/engine/install/) and run:
-```bash
-$ docker-compose up
-```
 This repository is tested on:
 - docker engine: v20.10.12
 - docker-compose: v1.29.2
 - M1 MacMini (2020)
 
+Install [docker](https://docs.docker.com/engine/install/) and run:
+```bash
+$ docker-compose up
+```
+
 ### Option 3: Kubernetes
+This repository is tested on:
+- minikube v1.29.0
+- kubectl 1.26.1
+- M1 MacMini (2020)
+
 Install [minikube](https://minikube.sigs.k8s.io/docs/start/) and run:
 ```bash
 make cluster  # init the k8s cluster
@@ -145,17 +152,27 @@ make charts   # install charts
 # Check all pods are running
 # kubectl get pods
 ```
-This repository is tested on:
-- minikube v1.29.0
-- kubectl 1.26.1
-- M1 MacMini (2020)
+
+#### Access to URL-Shortener
+Add host information in `/etc/hosts`:
+```bash
+127.0.0.1 url-shortener.local
+```
 
 To access grafana and url-shortner w/ localhost,
 ```bash
 minikube tunnel
 ```
 
-Open http://localhost:3000/
+Now, you can access `url-shortener` service through http://url-shortener.local/ .
+To open swagger UI, open http://url-shortener.local/docs/index.html
+
+#### Access to Grafana
+The following command will open Grafana on the web-browser:
+```bash
+minikube service prometheus-grafana
+```
+
 - id: admin
 - pw: prom-operator
 
