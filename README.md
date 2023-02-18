@@ -158,6 +158,7 @@ make charts   # install charts
 Add host information in `/etc/hosts`:
 ```bash
 127.0.0.1 url-shortener.local
+127.0.0.1 grafana.url-shortener.local
 ```
 
 To access grafana and url-shortner w/ localhost,
@@ -171,7 +172,7 @@ To open swagger UI, open http://url-shortener.local/docs/index.html
 
 #### Access to Grafana
 Open Grafana on the web-browser:
-http://url-shortener.local:3000/
+http://grafana.url-shortener.local/
 
 - id: admin
 - pw: prom-operator
