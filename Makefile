@@ -46,7 +46,7 @@ cluster:
 	helm repo add traefik https://traefik.github.io/charts
 	helm repo add jetstack https://charts.jetstack.io
 	helm repo update
-	kubectl apply -f tls
+	kubectl apply -f cert
 
 .PHONY: charts
 charts:
