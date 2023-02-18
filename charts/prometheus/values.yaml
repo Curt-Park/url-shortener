@@ -27,10 +27,7 @@ kube-prometheus-stack:
       labels: {}
       hosts: ["grafana.url-shortener.local"]
       path: /
-      ## TLS configuration for grafana Ingress
-      ## Secret must be manually created in the namespace
-      ##
-      tls: []
-      # - secretName: grafana-general-tls
-      #   hosts:
-      #   - grafana.example.com
+      tls:
+      - secretName: letsencrypt-prod
+        hosts:
+        - grafana.url-shortener.local

@@ -44,11 +44,14 @@ cluster:
 	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 	helm repo add bitnami https://charts.bitnami.com/bitnami
 	helm repo add traefik https://traefik.github.io/charts
+	helm repo add jetstack https://charts.jetstack.io
 	helm repo update
+	kubectl apply -f tls
 
 .PHONY: charts
 charts:
 	# `helm uninstall name` for removal
+	helm install cert-manager charts/cert-manager
 	helm install traefik charts/traefik
 	helm install promtail charts/promtail
 	helm install loki charts/loki
@@ -63,6 +66,7 @@ remove-charts:
 	helm uninstall loki || true
 	helm uninstall promtail || true
 	helm uninstall traefik || true
+	helm uninstall cert-manager || true
 
 finalize:
 	minikube delete
