@@ -40,7 +40,6 @@ ltest:
 cluster:
 	minikube start --driver=docker --extra-config=kubelet.housekeeping-interval=10s
 	minikube addons enable metrics-server
-	kubectl apply -f ingress
 	helm repo add grafana https://grafana.github.io/helm-charts
 	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 	helm repo add bitnami https://charts.bitnami.com/bitnami
