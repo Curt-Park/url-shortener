@@ -39,7 +39,7 @@
 - [x] Load Tests w/ [Locust](https://locust.io/)
 - [x] Redis failure fix on M1 mac (k8s - minikube)
 - [x] Ingress w/ Traefik (k8s)
-- [ ] TLS (k8s)
+- [x] TLS (k8s)
 - [ ] Frontend
 
 ## APIs
@@ -166,13 +166,13 @@ To access grafana and url-shortner w/ localhost,
 minikube tunnel
 ```
 
-Now, you can access `url-shortener` service through http://url-shortener.local/ .
+Now, you can access `url-shortener` service through https://url-shortener.local/ .
 
-To open swagger UI, open http://url-shortener.local/docs/index.html
+To open swagger UI, open https://url-shortener.local/docs/index.html
 
 #### Access to Grafana
 Open Grafana on the web-browser:
-http://grafana.url-shortener.local/
+https://grafana.url-shortener.local/
 
 - id: admin
 - pw: prom-operator
