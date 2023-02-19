@@ -161,7 +161,12 @@ Add host information in `/etc/hosts`:
 127.0.0.1 grafana.url-shortener.local
 ```
 
-To access grafana and url-shortner w/ localhost,
+Create a private certificate a secret for TLS:
+```bash
+make tls-secret
+```
+
+Expose grafana and url-shortner:
 ```bash
 minikube tunnel
 ```
