@@ -57,20 +57,17 @@ entrypoint:
 
 ingress:
   enabled: true
-  className: ""
+  className: traefik
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # traefik.ingress.kubernetes.io/rewrite-target: /
-    # kubernetes.io/tls-acme: "true"
   hosts:
     - host: url-shortener.local
       paths:
         - path: /
           pathType: Prefix
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  tls:
+     - secretName: tls-secret
+       hosts:
+       - url-shortener.local
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious

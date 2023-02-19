@@ -46,10 +46,16 @@ cluster:
 	helm repo add traefik https://traefik.github.io/charts
 	helm repo update
 
+tls-secret:
+	openssl req  -nodes -new -x509  -keyout server.key -out server.crt -config openssl.conf -days 365
+	kubectl create secret generic tls-secret --from-file=tls.crt=./server.crt --from-file=tls.key=./server.key
+	kubectl apply -f default-tls-store.yaml
+
 .PHONY: charts
 charts:
 	# `helm uninstall name` for removal
 	helm install traefik charts/traefik
+	$(MAKE) tls-secret
 	helm install promtail charts/promtail
 	helm install loki charts/loki
 	helm install prometheus charts/prometheus
@@ -62,6 +68,8 @@ remove-charts:
 	helm uninstall prometheus || true
 	helm uninstall loki || true
 	helm uninstall promtail || true
+	kubectl delete tlsstore default || true
+	kubectl delete secret tls-secret || true
 	helm uninstall traefik || true
 
 finalize:

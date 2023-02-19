@@ -15,22 +15,14 @@ kube-prometheus-stack:
             target_label: kubernetes_node
   grafana:
     adminPassword: prom-operator
-    # service:
-    #   type: LoadBalancer
-    #   port: 3000
     ingress:
       enabled: true
       ingressClassName: traefik
       annotations: {}
-        # kubernetes.io/ingress.class: nginx
-        # kubernetes.io/tls-acme: "true"
       labels: {}
       hosts: ["grafana.url-shortener.local"]
       path: /
-      ## TLS configuration for grafana Ingress
-      ## Secret must be manually created in the namespace
-      ##
-      tls: []
-      # - secretName: grafana-general-tls
-      #   hosts:
-      #   - grafana.example.com
+      tls:
+      - secretName: tls-secret
+        hosts:
+        - grafana.url-shortener.local
