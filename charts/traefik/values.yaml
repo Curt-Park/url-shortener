@@ -566,7 +566,7 @@ ports:
     # Port Redirections
     # Added in 2.2, you can make permanent redirects via entrypoints.
     # https://docs.traefik.io/routing/entrypoints/#redirection
-    # redirectTo: websecure
+    redirectTo: websecure
     #
     # Trust forwarded  headers information (X-Forwarded-*).
     # forwardedHeaders:
@@ -760,7 +760,7 @@ persistence:
 certResolvers: {}
 #   letsencrypt:
 #     # for challenge options cf. https://doc.traefik.io/traefik/https/acme/
-#     email: email@example.com
+#     email: youremail@gmail.com
 #     dnsChallenge:
 #       # also add the provider's required configuration under env
 #       # or expand then from secrets/configmaps with envfrom

@@ -2,3 +2,5 @@ tmp
 *.rdb
 cover.out
 __pycache__
+*.crt
+*.key
